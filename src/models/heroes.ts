@@ -1,17 +1,29 @@
-import { Effect, Reducer } from 'umi';
+import { Effect, Reducer, Subscription, request } from 'umi';
+
+interface HeroProps {
+  ename: number;
+  cname: string;
+  title: string;
+  new_type: number;
+  hero_type: number;
+  skin_name: string;
+}
 
 export interface HeroesModelState {
-  name: string;
+  heroes: HeroProps[];
 }
 
 export interface HeroesModelType {
   namespace: 'heroes';
   state: HeroesModelState;
   effects: {
-    query: Effect;
+    fetch: Effect;
   };
   reducers: {
     save: Reducer<HeroesModelState>;
+  };
+  subscriptions: {
+    setup: Subscription;
   };
 }
 
@@ -19,20 +31,39 @@ const HeroesModel: HeroesModelType = {
   namespace: 'heroes',
 
   state: {
-    name: 'heroes',
+    heroes: [],
   },
 
   effects: {
-    *query({ payload }, { call, put }) {
-      yield;
+    *fetch({ type, payload }, { put, call, select }) {
+      const data = yield request('/web201605/js/herolist.json');
+      yield put({
+        type: 'save',
+        payload: {
+          heroes: data || [],
+        },
+      });
     },
   },
+
   reducers: {
     save(state, action) {
       return {
         ...state,
         ...action.payload,
       };
+    },
+  },
+
+  subscriptions: {
+    setup({ history, dispatch }) {
+      return history.listen(({ pathname }) => {
+        if (pathname === '/heroes') {
+          dispatch({
+            type: 'fetch',
+          });
+        }
+      });
     },
   },
 };

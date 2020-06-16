@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import styles from './heroes.less';
+import { Row, Col } from 'antd';
 import { connect, HeroesModelState, ConnectProps } from 'umi';
 
 interface PageProps extends ConnectProps {
@@ -7,12 +8,17 @@ interface PageProps extends ConnectProps {
 }
 
 const Heroes: FC<PageProps> = ({ heroes }) => {
-  console.log(heroes);
   return (
-    <div className={styles.title}>
-      <h1>Page heroes</h1>
-      <h2>This is {heroes.name}</h2>
-    </div>
+    <Row>
+      {heroes.heroes.map(({ ename, cname }) => (
+        <Col key={ename} span={3} className={styles.hero}>
+          <img
+            src={`https://game.gtimg.cn/images/yxzj/img201606/heroimg/${ename}/${ename}.jpg`}
+          />
+          <p>{cname}</p>
+        </Col>
+      ))}
+    </Row>
   );
 };
 export default connect(({ heroes }: { heroes: HeroesModelState }) => ({
