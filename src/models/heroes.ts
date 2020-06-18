@@ -11,6 +11,7 @@ interface HeroProps {
 
 export interface HeroesModelState {
   heroes: HeroProps[];
+  freeHeroes: HeroProps[];
 }
 
 export interface HeroesModelType {
@@ -32,15 +33,23 @@ const HeroesModel: HeroesModelType = {
 
   state: {
     heroes: [],
+    freeHeroes: [],
   },
 
   effects: {
     *fetch({ type, payload }, { put, call, select }) {
-      const data = yield request('/web201605/js/herolist.json');
+      const heroes = yield request('/web201605/js/herolist.json');
+      const freeHeroes = yield request('/freeheros.json', {
+        method: 'post',
+        data: {
+          number: 10,
+        },
+      });
       yield put({
         type: 'save',
         payload: {
-          heroes: data || [],
+          heroes: heroes || [],
+          freeHeroes: freeHeroes || [],
         },
       });
     },
