@@ -1,6 +1,6 @@
 import { Effect, Reducer, Subscription, request } from 'umi';
 
-interface HeroProps {
+export interface HeroProps {
   ename: number;
   cname: string;
   title: string;

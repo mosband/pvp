@@ -32,7 +32,7 @@ export default function index({
         >
           {menuData.map(menu => (
             <Menu.Item key={`/${menu.route}`}>
-              <Link to={menu.route}>{menu.name}</Link>
+              <Link to={`/${menu.route}`}>{menu.name}</Link>
             </Menu.Item>
           ))}
         </Menu>
